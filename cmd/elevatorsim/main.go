@@ -183,8 +183,8 @@ func runTUI(ctx context.Context, frames <-chan ui.Frame, prof simulation.Profile
 }
 
 func runGame(ctx context.Context, frames <-chan ui.Frame, cfg ui.Config) error {
-	ebiten.SetWindowSize(640, 480)
-	ebiten.SetWindowTitle("Elevator Sim - Pixel Art")
+	ebiten.SetWindowSize(game.GBWidth*3, game.GBHeight*3)
+	ebiten.SetWindowTitle("Elevator Sim - Pixel Art (GBA 16px)")
 
 	g, err := game.New(ctx, frames)
 	if err != nil {
