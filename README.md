@@ -18,6 +18,7 @@ O projeto requer o Go 1.26+ (estou usando o `max` nativo e a nova semântica de 
 
 ```sh
 go run ./cmd/elevatorsim                 # A estrela do show: TUI em tempo real
+go run ./cmd/elevatorsim -pixel          # MODO GRÁFICO: Interface visual procedural em Pixel Art estilo Game Boy!
 go run ./cmd/elevatorsim -ascii          # Se o seu terminal for antigo e não desenhar caixas direito
 go run ./cmd/elevatorsim -headless       # Sem firula visual: apenas o progresso e os números finais (bom pra CI)
 ```
@@ -28,6 +29,7 @@ go run ./cmd/elevatorsim -headless       # Sem firula visual: apenas o progresso
 
 Você pode plugar algumas flags no comando para mudar as regras do jogo:
 
+- `-pixel`: Substitui a interface do terminal por uma UI procedural gráfica simulando a tela de um Game Boy original! 🎮
 - `-passengers 2000`: Quantas pessoas colocar no prédio. O laço para exatamente na N-ésima chegada.
 - `-speed 5`: Acelera o tempo! Escala a física e a chegada das pessoas juntas, então a carga do prédio continua realista. (No modo headless, a velocidade pula pra 30x automaticamente).
 - `-fps 20`: Taxa de quadros por segundo da interface.
