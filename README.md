@@ -1,7 +1,5 @@
 # 🏢 Elevatorsim: O caos do horário de pico, domado em Go
 
-![Banner do Simulador de Elevadores](./banner.png)
-
 Se você já esperou um elevador no térreo de um prédio comercial às 8 da manhã, sabe que o tráfego pode virar um pesadelo rápido. Este projeto nasceu para responder a uma pergunta simples: **o despacho inteligente realmente diminui o tempo de espera das pessoas?**
 
 Aqui nós simulamos um prédio de 10 andares e 3 elevadores independentes operando concorrentemente. Tudo rodando no seu terminal, em tempo real, com métricas rolando soltas e os carrinhos subindo e descendo loucamente.
@@ -30,7 +28,7 @@ go run ./cmd/elevatorsim -headless       # Sem firula visual: apenas o progresso
 
 Você pode plugar algumas flags no comando para mudar as regras do jogo:
 
-- `-passengers 2000`: Quantas almas colocar no prédio. O laço para exatamente na N-ésima chegada.
+- `-passengers 2000`: Quantas pessoas colocar no prédio. O laço para exatamente na N-ésima chegada.
 - `-speed 5`: Acelera o tempo! Escala a física e a chegada das pessoas juntas, então a carga do prédio continua realista. (No modo headless, a velocidade pula pra 30x automaticamente).
 - `-fps 20`: Taxa de quadros por segundo da interface.
 - `-seed 42`: Fixa o comportamento caótico. Quer testar o mesmo rush do dia anterior? Use a mesma seed. Apenas lembre que o escalonador do Go pode variar os milissegundos exatos de processamento.

@@ -18,8 +18,10 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/hajimehoshi/ebiten/v2"
 
 	"elevatorsim/domain"
+	"elevatorsim/game"
 	"elevatorsim/simulation"
 	"elevatorsim/ui"
 )
@@ -37,6 +39,7 @@ func run() int {
 		progress   = flag.Duration("progress", 2*time.Second, "headless: intervalo do relatório (> 0; não tem 'desligado' aqui)")
 		fps        = flag.Int("fps", 20, "taxa de desenho")
 		ascii      = flag.Bool("ascii", false, "só ASCII, pra terminal que não desenha caixa/seta direito")
+		pixel      = flag.Bool("pixel", false, "usa Ebitengine para rodar com interface gráfica pixel art")
 	)
 	flag.Parse()
 
@@ -117,6 +120,8 @@ func run() int {
 	if *headless {
 		printPreamble(os.Stdout, gen, cfg, *passengers)
 		err = runHeadless(ctx, frames, gen.Profile(), cfg, *progress)
+	} else if *pixel {
+		err = runGame(ctx, frames, cfg)
 	} else {
 		err = runTUI(ctx, frames, gen.Profile(), cfg)
 	}
@@ -175,6 +180,21 @@ func runTUI(ctx context.Context, frames <-chan ui.Frame, prof simulation.Profile
 		return nil // saída por sinal não é falha
 	}
 	return err
+}
+
+func runGame(ctx context.Context, frames <-chan ui.Frame, cfg ui.Config) error {
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("Elevator Sim - Pixel Art")
+
+	g, err := game.New(ctx, frames)
+	if err != nil {
+		return err
+	}
+
+	if err := ebiten.RunGame(g); err != nil && err != ebiten.Termination {
+		return err
+	}
+	return nil
 }
 
 // headless existe pra dar pra verificar isso sem TTY. Ele consome exatamente os mesmos
