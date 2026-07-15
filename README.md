@@ -1,5 +1,7 @@
 # 🏢 Elevatorsim: O caos do horário de pico, domado em Go
 
+![Banner do Simulador de Elevadores](./banner.png)
+
 Se você já esperou um elevador no térreo de um prédio comercial às 8 da manhã, sabe que o tráfego pode virar um pesadelo rápido. Este projeto nasceu para responder a uma pergunta simples: **o despacho inteligente realmente diminui o tempo de espera das pessoas?**
 
 Aqui nós simulamos um prédio de 10 andares e 3 elevadores independentes operando concorrentemente. Tudo rodando no seu terminal, em tempo real, com métricas rolando soltas e os carrinhos subindo e descendo loucamente.
