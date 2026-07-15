@@ -1,87 +1,88 @@
-# 🏢 Elevatorsim: Go Concurrency & Routing Algorithms in Action
+# 🏢 Elevatorsim: Concorrência em Go & Algoritmos de Roteamento
 
-**Elevatorsim** is a high-performance, real-time simulation engine built in Go. It demonstrates advanced concurrency patterns (Actor Model), intelligent routing algorithms, and real-time telemetry without relying on traditional locking mechanisms (`sync.Mutex`).
+![Elevatorsim Banner](docs/banner.png)
 
-While it visually simulates a 10-story building with 3 independent elevators, the underlying architecture is a robust foundation for solving complex, real-world distributed systems and logistics problems.
+O **Elevatorsim** é um motor de simulação em tempo real, de alto desempenho, construído em Go. Ele demonstra padrões avançados de concorrência (Modelo de Atores), algoritmos de roteamento inteligentes e telemetria em tempo real, tudo isso sem depender de mecanismos tradicionais de bloqueio (`sync.Mutex`).
+
+Embora, visualmente, ele simule um prédio de 10 andares com 3 elevadores independentes correndo de um lado para o outro de forma divertida, a **arquitetura por trás disso** é uma base robusta para resolver problemas complexos de logística e sistemas distribuídos no mundo real.
 
 ---
 
-## 🎯 Enterprise Vision & Practical Applications
+## 🎯 Visão Corporativa e Aplicações Práticas
 
-Beyond a visual simulation, the architectural choices and algorithms implemented in **Elevatorsim** have direct applications in large-scale enterprise scenarios:
+Muito além de uma simulação visual simpática, as escolhas arquiteturais e os algoritmos implementados no **Elevatorsim** têm aplicações diretas em cenários corporativos de larga escala:
 
-### 1. Smart Logistics & Fleet Management
-Os algoritmos que decidem qual elevador responde a uma chamada (ETA-based Dispatching) e como eles se movem (Algoritmo LOOK) são idênticos aos necessários para roteamento de AGVs (Veículos Guiados Automatizados) em armazéns da Amazon, despacho de frotas (Uber/Logística) ou rotas de drones de entrega. Ele otimiza para tempo mínimo de espera e rendimento máximo.
+### 1. Logística Inteligente e Gestão de Frotas
+Os algoritmos que decidem qual elevador responde a uma chamada (Despacho baseado em ETA) e como eles se movem (Algoritmo LOOK) são estruturalmente idênticos aos usados para rotear AGVs (Veículos Guiados Automatizados) em grandes armazéns como os da Amazon, despachar frotas de aplicativo (Uber/Logística) ou calcular rotas de drones de entrega. O foco é sempre o mesmo: **otimizar para o mínimo de tempo de espera e máximo de capacidade de atendimento**.
 
-### 2. High-Concurrency Systems (Actor Model)
-Este projeto é um estudo de caso prático na construção de sistemas altamente concorrentes e sem locks (lock-free). Ao isolar o estado dentro das goroutines e comunicar estritamente via canais, essa arquitetura elimina condições de corrida e gargalos de concorrência. Esse mesmo padrão é altamente eficaz para construir:
+### 2. Sistemas de Alta Concorrência (Actor Model)
+Este projeto é um estudo de caso prático sobre como construir sistemas altamente concorrentes e *lock-free* (livres de travas). Ao isolar o estado dentro das próprias *goroutines* e fazer a comunicação estritamente via canais, a arquitetura elimina condições de corrida e gargalos comuns. Esse mesmo padrão é essencial na engenharia de:
 - Motores de processamento financeiro em tempo real (Trading Engines).
-- API Gateways e Microsserviços de alto throughput.
-- Gerenciamento de estado de servidores de jogos multiplayer.
+- API Gateways e Microsserviços de altíssimo *throughput*.
+- Servidores de jogos multiplayer com alto volume de troca de estado.
 
-### 3. Digital Twins & IoT
-Elevatorsim atua como um "Gêmeo Digital" (Digital Twin). Ele processa um Processo de Poisson Não-Homogêneo (NHPP) para simular horários de pico do mundo real (ex: a corrida das 8h da manhã). Empresas podem usar motores semelhantes para ingerir dados de sensores IoT, simular ambientes físicos e prever gargalos de tráfego antes que aconteçam.
-
----
-
-## 🛠️ The Invisible Architecture (A Arquitetura Invisível)
-
-A simulação é alimentada por 6 goroutines isoladas: 1 Controlador principal, 3 Elevadores independentes, 1 Gerador de Tráfego e 1 "Pump" de Telemetria.
-
-- **Lock-Free State:** Mutações de estado só acontecem dentro da própria goroutine do ator. O Controlador nunca bloqueia esperando um elevador; ele mantém uma réplica em tempo real do estado do mundo via fluxos de telemetria contínuos.
-- **Resilient Telemetry ("Drop-Newest"):** Se a UI gráfica ou o consumidor de dados ficar lento, o motor de física não trava. Ele descarta frames visuais obsoletos enquanto preserva contadores matemáticos cumulativos (como o tempo total de espera de todos), garantindo precisão absoluta mesmo sob carga máxima.
-- **Smart Dispatching:** O Controlador calcula o tempo estimado de chegada (ETA) em milissegundos, avaliando velocidade atual, direção e carga de passageiros, e delega o atendimento para o veículo mais eficiente na malha.
+### 3. Gêmeos Digitais (Digital Twins) e IoT
+O Elevatorsim atua como um verdadeiro "Gêmeo Digital". Ele utiliza a matemática de um Processo de Poisson Não-Homogêneo (NHPP) para simular os horários de pico do mundo real (ex: o temido rush das 8h da manhã nos prédios comerciais). Empresas utilizam motores semelhantes para ingerir dados de sensores IoT, simular os limites físicos de seus ambientes e prever gargalos antes que o caos aconteça.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ A Arquitetura Invisível
+
+Toda a simulação é orquestrada por **6 goroutines completamente isoladas**: 1 Controlador principal, 3 Elevadores independentes, 1 Gerador de Tráfego e 1 "Bomba" de Telemetria.
+
+- **Estado Lock-Free:** Mutações de estado acontecem exclusivamente dentro da *goroutine* proprietária. O Controlador nunca congela esperando o elevador responder; ele usa fluxos de telemetria para manter um "espelho" em tempo real do mundo.
+- **Telemetria Resiliente ("Drop-Newest"):** Se a interface gráfica ficar lenta ou o consumidor engasgar, o motor de física não para. Ele apenas descarta os *frames* visuais mais antigos, mas protege religiosamente os acumuladores matemáticos (como o total de espera), garantindo precisão analítica sob qualquer estresse de carga.
+- **Despacho Inteligente (Smart Dispatching):** O Controlador avalia a velocidade, o peso e a direção de todos os veículos da malha e calcula o Tempo Estimado de Chegada (ETA) em questão de milissegundos, delegando a viagem para a melhor opção.
+
+---
+
+## 🚀 Como ver a mágica rodando
 
 Requerimento mínimo: **Go 1.26+**.
 
-### Rodando a Simulação
+### Comandos de Execução
+
+O projeto possui três visualizadores embutidos. Basta abrir o seu terminal e rodar:
 
 ```sh
-# A estrela do show: Terminal UI (TUI) rodando em tempo real
-go run ./cmd/elevatorsim
-
-# MODO GRÁFICO: Um ambiente 2D retro em Pixel Art
+# 1. MODO GRÁFICO: Interface visual 2D procedural em Pixel Art estilo Game Boy! 🎮
 go run ./cmd/elevatorsim -pixel
 
-# Modo Headless: Velocidade máxima, sem UI. Perfeito para testes em CI/CD
+# 2. MODO TUI (Terminal): Monitoramento e gráficos desenhados direto no console
+go run ./cmd/elevatorsim
+
+# 3. MODO HEADLESS: Velocidade insana, sem interface. Feito para testes de CI/CD e coleta bruta de dados
 go run ./cmd/elevatorsim -headless
 ```
 
-### 📸 Previews (Telas do Sistema)
+### 📸 Suas Telas (Previews)
 
-#### 1. Interface Gráfica 2D (Pixel Art)
-> *(Coloque o seu print aqui: Substitua esta imagem salvando o seu screenshot como `docs/pixel_preview.png`)*
+> *(Dica: Faça um screenshot do seu terminal rodando o modo gráfico e o modo TUI, salve como `docs/pixel_preview.png` e `docs/tui_preview.png` para substituir os placeholders abaixo!)*
 
+**Modo Gráfico 2D:**
 ![Pixel Art UI Preview](docs/pixel_preview.png)
 
-#### 2. Monitoramento via Terminal (TUI)
-> *(Coloque o seu print aqui: Substitua esta imagem salvando o seu screenshot como `docs/tui_preview.png`)*
-
+**Modo de Monitoramento via Terminal:**
 ![Terminal UI Preview](docs/tui_preview.png)
 
 ---
 
-## ⚙️ Configuration Flags
+## ⚙️ Teste de Estresse (Flags de Configuração)
 
-Você pode ajustar as regras do motor para simular diferentes cenários de estresse:
+Você pode alterar as leis da física da simulação usando *flags*:
 
-- `-pixel`: Substitui o terminal TUI por uma renderização gráfica 2D procedural usando o Ebitengine.
-- `-passengers 2000`: Define a população total do teste. A simulação para exatamente na N-ésima chegada.
-- `-speed 5`: Dilatação temporal. Escala a física do prédio e as chegadas proporcionalmente, acelerando os testes sem quebrar a proporção de carga real.
-- `-fps 20`: Ajusta a taxa de atualização da interface sem afetar a física subjacente.
-- `-seed 42`: Geração de tráfego determinístico. Use a mesma *seed* para reprisar exatamente o mesmo padrão de embarques e debugar anomalias.
+- `-passengers 2000`: Define a população total do teste (quantas pessoas vão usar o prédio no dia). A simulação para no último passageiro entregue.
+- `-speed 5`: Dilatação temporal. Acelera o limite físico do prédio e o intervalo de chegadas dos passageiros mantendo a proporção exata, permitindo testar picos diários em segundos.
+- `-fps 20`: Ajusta o peso de renderização visual (apenas para TUI/Pixel), sem atrapalhar a física subjacente.
+- `-seed 42`: Fixa a aleatoriedade. Use a mesma *seed* para reproduzir os mesmos passageiros no mesmo exato momento, excelente para testar algoritmos de despacho e comparar desempenhos.
 
 ---
 
-## 🔬 Metrics & Analysis
+## 🔬 Métricas e Análises em Tempo Real
 
-A simulação gera métricas em tempo real matematicamente rigorosas:
-- **Tempos de Espera Cumulativos:** `soma(esperas) / soma(atendidos)` com proteção contra frame-drop.
-- **P95 & Max Waits:** Histogramas ao vivo rastreando a experiência da cauda longa.
-- **Throughput:** Mede a capacidade real de escoamento do sistema sob o pico extremo das 8h da manhã.
+A simulação não é apenas esteticamente agradável; ela compila estatísticas rigorosas:
+- **Tempos de Espera Cumulativos:** O cálculo de média (`soma / atendidos`) nunca sofre defasagem visual.
+- **Experiência Real (P95 e Máximas):** Uma fila longa demais pode esconder péssimos casos de espera; o P95 escancara os atrasos inaceitáveis.
+- **Capacidade (Throughput):** Avalia a vazão total do seu prédio durante o horário de estrangulamento extremo.
 
-Explore o diretório `simulation/` para ver as engrenagens do motor distribuído, ou `game/` para entender como o **Ebitengine** traduz telemetria em tempo real em gráficos.
+Sinta-se à vontade para mergulhar nos diretórios `simulation/` para ver a mágica dos motores distribuídos, ou `game/` para ver como desenhamos a simulação pixel-a-pixel no Ebitengine!
